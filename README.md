@@ -1,5 +1,5 @@
 # graphql-java-spring-boot-example
-Sample app based on this tutorial: [Building a GraphQL Server with Spring Boot](https://www.pluralsight.com/guides/java-and-j2ee/building-a-graphql-server-with-spring-boot). 
+Stripped down Spring Boot Application based on this tutorial: [Building a GraphQL Server with Spring Boot](https://www.pluralsight.com/guides/java-and-j2ee/building-a-graphql-server-with-spring-boot). 
 
 
 To run, execute `com.example.DemoGraphQL.DemoGraphQlApplication`.
