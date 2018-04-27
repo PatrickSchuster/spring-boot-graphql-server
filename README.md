@@ -5,3 +5,17 @@ Stripped down Spring Boot Application based on this tutorial: [Building a GraphQ
 To run, execute `com.example.DemoGraphQL.DemoGraphQlApplication`.
 
 Access graphql by visiting [http://localhost:8080/graphql](http://localhost:8080/graphql) in e.g. POSTMAN or visit [http://localhost:8080/graphiql](http://localhost:8080/graphiql) for the graphiql browser interface.
+
+# Sample queries:
+
+```javascript
+findAllBooks {
+  id
+  title
+  author {
+    firstName
+    lastName
+  }
+}
+```
+will yield all books (with their id, title and author), where the author's first and last name will be shown.
