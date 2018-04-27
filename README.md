@@ -5,7 +5,3 @@ Stripped down Spring Boot Application based on this tutorial: [Building a GraphQ
 To run, execute `com.example.DemoGraphQL.DemoGraphQlApplication`.
 
 Access graphql by visiting [http://localhost:8080/graphql](http://localhost:8080/graphql) in e.g. POSTMAN or visit [http://localhost:8080/graphiql](http://localhost:8080/graphiql) for the graphiql browser interface.
-
-# License
-MIT
-# spring-boot-graphql-server
