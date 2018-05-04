@@ -1,5 +1,6 @@
 package com.example.DemoGraphQL.filter;
 
+import com.example.DemoGraphQL.filter.resolver.Eq;
 import org.springframework.stereotype.Component;
 
 @Component

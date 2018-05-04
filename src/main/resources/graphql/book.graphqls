@@ -7,13 +7,16 @@ type Book {
 }
 
 input FilterInput {
-    attribute: String!
-    operator: String!
-    value: String!
+    attribute: String
+    operator: String
+    value: String
+
+    and: [FilterInput!]
+    or: [FilterInput!]
 }
 
 extend type Query {
-    findBooks(filters: [FilterInput]): [Book]!
+    findBooks(filters: FilterInput): [Book]!
     findAllBooks: [Book]!
     countBooks: Long!
     findBookWithId(id: ID): Book

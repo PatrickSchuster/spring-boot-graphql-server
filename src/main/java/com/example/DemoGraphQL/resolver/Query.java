@@ -53,26 +53,28 @@ public class Query implements GraphQLQueryResolver {
         return authorRepository.count();
     }
 
-    public Iterable<Book> findBooks(ArrayList<FilterInput> filters)
+    public Iterable<Book> findBooks(FilterInput filters)
     {
-        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
-        Root<Book> root = query.from(Book.class);
 
-        List<Predicate> predicates = new ArrayList<>();
-
-        for (FilterInput filter : filters) {
-
-            try {
-                predicates.add(this.filterFactory.getInstance(filter).getPredicate(criteriaBuilder, root));
-            }
-            catch (Exception e) {
-
-            }
-        }
-
-        query.where(predicates.toArray(new Predicate[0]));
-
-        return entityManager.createQuery(query).getResultList();
+        return bookRepository.findAll();
+//        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
+//        Root<Book> root = query.from(Book.class);
+//
+//        List<Predicate> predicates = new ArrayList<>();
+//
+//        for (FilterInput filter : filters) {
+//
+//            try {
+//                predicates.add(this.filterFactory.getInstance(filter).getPredicate(criteriaBuilder, root));
+//            }
+//            catch (Exception e) {
+//
+//            }
+//        }
+//
+//        query.where(predicates.toArray(new Predicate[0]));
+//
+//        return entityManager.createQuery(query).getResultList();
     }
 }

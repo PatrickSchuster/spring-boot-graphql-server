@@ -1,4 +1,6 @@
-package com.example.DemoGraphQL.filter;
+package com.example.DemoGraphQL.filter.resolver;
+
+import com.example.DemoGraphQL.filter.AbstractFilter;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
