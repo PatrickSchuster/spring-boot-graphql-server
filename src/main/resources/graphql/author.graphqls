@@ -6,14 +6,20 @@ type Author {
 
 type Query {
     findAllAuthors(filter: AuthorFilter): [Author]!
-    findAuthors(filter: [AllPurposeFilter]): [Author]
+    #findAuthors(filter: [AllPurposeFilter]): [Author]
+    findAuthors(filter: [Operand]): [Author]
     countAuthors: Long!
+}
+
+input Operand {
+    operand: String!
+    filters: [AllPurposeFilter]!
 }
 
 input AllPurposeFilter {
     firstProperty: String!
-    secondProperty: String!
     operator: String!
+    secondProperty: String!
 }
 
 input AuthorFilter {

@@ -70,7 +70,7 @@ public class DemoGraphQlApplication {
             bookRepository.save(new Book("Sleeping beauties", "113546", 1000, king));
             bookRepository.save(new Book("The shining", "554478", 680, king));
             bookRepository.save(new Book("Illuminati", "345352", 900, brown));
-            bookRepository.save(new Book("And then there where none", "375643", 600, christie));
+            bookRepository.save(new Book("And then there were none", "375643", 600, christie));
             bookRepository.save(new Book("Home going", "643642", 500, smith));
 
         };

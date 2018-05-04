@@ -5,6 +5,7 @@ import com.example.DemoGraphQL.filter.AllPurposeFilter;
 import com.example.DemoGraphQL.filter.AuthorFilter;
 import com.example.DemoGraphQL.model.Author;
 import com.example.DemoGraphQL.model.Book;
+import com.example.DemoGraphQL.operand.Operand;
 import com.example.DemoGraphQL.repository.AuthorRepository;
 import com.example.DemoGraphQL.repository.BookRepository;
 import org.jooq.DSLContext;
@@ -42,7 +43,6 @@ public class Query implements GraphQLQueryResolver {
         String firstNameContains = authorFilter.getFirstNameContains();
         String lastNameContains = authorFilter.getLastNameContains();
         return authorRepository.findByFirstNameContainingIgnoreCase(firstNameContains);
-        //return authorRepository.findByFirstNameContainingIgnoreCaseAndByLastNameContainingIgnoreCase(firstNameContains, lastNameContains);
     }
 
     public Iterable<Book> findAllBooks() {
@@ -53,12 +53,9 @@ public class Query implements GraphQLQueryResolver {
         return bookRepository.findOne(id);
     }
 
+    /*
     public List<Author> findAuthors(List<AllPurposeFilter> filters) throws SQLException {
-        //return authorRepository.findAll();
-        ////List<Author> authors = entityManager.createNativeQuery("SELECT * FROM AUTHOR", Author.class).getResultList();
-        ////return authors;
-
-        final SelectJoinStep<Record> temp = create.select().from("AUTHOR");
+        final SelectJoinStep<Record> temp = create.select().from(Author.class.getSimpleName());
         StringBuilder where = new StringBuilder();
         for (int i = 0; i < filters.size(); i++) {
             where.append(filters.get(i).getFirstProperty() + filters.get(i).getOperator() + "'" + filters.get(i).getSecondProperty() + "'");
@@ -77,6 +74,24 @@ public class Query implements GraphQLQueryResolver {
             authors.add(new Author(id, firstName, lastName));
         }
         return authors;
+    }
+    */
+
+    public List<Author> findAuthors(List<Operand> operands) {
+        final SelectJoinStep<Record> temp = create.select().from(Author.class.getSimpleName());
+        StringBuilder where = new StringBuilder();
+        for (int i = 0; i < operands.size(); i++) {
+            Operand operand = operands.get(i);
+            where.append(" " + operand.getOperand() + " ");
+            for(int j = 0; j < operand.getFilters().size(); j++) {
+                AllPurposeFilter filter = operand.getFilters().get(j);
+                where.append(filter.getFirstProperty() + filter.getOperator() + "'" + filter.getSecondProperty() + "'");
+                if(j < operand.getFilters().size()-1){
+                    where.append(" " + operand.getOperand()+ " ");
+                }
+            }
+        }
+        return null;
     }
 
     public long countBooks() {
