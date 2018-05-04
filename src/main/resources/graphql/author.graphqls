@@ -5,6 +5,18 @@ type Author {
 }
 
 type Query {
-    findAllAuthors: [Author]!
+    findAllAuthors(filter: AuthorFilter): [Author]!
+    findAuthors(filter: [AllPurposeFilter]): [Author]
     countAuthors: Long!
+}
+
+input AllPurposeFilter {
+    firstProperty: String!
+    secondProperty: String!
+    operator: String!
+}
+
+input AuthorFilter {
+    firstName_contains: String
+    lastName_contains: String
 }

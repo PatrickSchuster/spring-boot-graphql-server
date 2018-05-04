@@ -15,17 +15,18 @@ import javax.persistence.Id;
 public class Author {
 
     @Id
-    @Column(name = "book_id", nullable = false)
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
+    @Setter
     private Long id;
 
-    @Column(name = "author_first_name", nullable = false)
+    @Column(name = "FIRSTNAME", nullable = false)
     @Getter
     @Setter
     private String firstName;
 
-    @Column(name = "author_last_name", nullable = false)
+    @Column(name = "LASTNAME", nullable = false)
     @Getter
     @Setter
     private String lastName;
@@ -33,6 +34,13 @@ public class Author {
     public Author(Long id) {
         this.id = id;
     }
+
+    public Author(Long id, String firstName, String lastName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
 
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
