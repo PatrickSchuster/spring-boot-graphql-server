@@ -1,5 +1,6 @@
 package com.example.DemoGraphQL;
 
+import com.example.DemoGraphQL.filter.FilterFactory;
 import com.example.DemoGraphQL.model.Author;
 import com.example.DemoGraphQL.model.Book;
 import com.example.DemoGraphQL.repository.AuthorRepository;
@@ -44,8 +45,8 @@ public class DemoGraphQlApplication {
      * @return
      */
     @Bean
-    public Query query(AuthorRepository authorRepository, BookRepository bookRepository) {
-        return new Query(authorRepository, bookRepository);
+    public Query query(AuthorRepository authorRepository, BookRepository bookRepository, FilterFactory filterFactory) {
+        return new Query(authorRepository, bookRepository, filterFactory);
     }
 
     /**
