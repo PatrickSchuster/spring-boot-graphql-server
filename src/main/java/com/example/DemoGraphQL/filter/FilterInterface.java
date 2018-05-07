@@ -6,4 +6,6 @@ import javax.persistence.criteria.Root;
 
 public interface FilterInterface {
     Predicate getPredicate(CriteriaBuilder criteriaBuilder, Root root);
+
+
 }

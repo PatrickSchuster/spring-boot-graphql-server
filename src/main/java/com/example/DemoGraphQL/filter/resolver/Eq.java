@@ -8,7 +8,7 @@ import javax.persistence.criteria.Root;
 
 public class Eq extends AbstractFilter
 {
-    Eq(String attribute, String value) {
+    public Eq(String attribute, String value) {
         super(attribute, value);
     }
 

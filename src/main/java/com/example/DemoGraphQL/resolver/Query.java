@@ -3,6 +3,7 @@ package com.example.DemoGraphQL.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.filter.FilterFactory;
 import com.example.DemoGraphQL.filter.FilterInput;
+import com.example.DemoGraphQL.filter.resolver.Resolver;
 import com.example.DemoGraphQL.model.Author;
 import com.example.DemoGraphQL.model.Book;
 import com.example.DemoGraphQL.repository.AuthorRepository;
@@ -26,11 +27,12 @@ public class Query implements GraphQLQueryResolver {
 
     private BookRepository bookRepository;
     private AuthorRepository authorRepository;
+    private Resolver resolver;
 
-    public Query(AuthorRepository authorRepository, BookRepository bookRepository, FilterFactory filterFactory) {
+    public Query(AuthorRepository authorRepository, BookRepository bookRepository, Resolver resolver) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
-        this.filterFactory = filterFactory;
+        this.resolver = resolver;
     }
 
     public Iterable<Book> findAllBooks() {
@@ -55,26 +57,16 @@ public class Query implements GraphQLQueryResolver {
 
     public Iterable<Book> findBooks(FilterInput filters)
     {
+        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
+        Root<Book> root = query.from(Book.class);
 
-        return bookRepository.findAll();
-//        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
-//        CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
-//        Root<Book> root = query.from(Book.class);
-//
-//        List<Predicate> predicates = new ArrayList<>();
-//
-//        for (FilterInput filter : filters) {
-//
-//            try {
-//                predicates.add(this.filterFactory.getInstance(filter).getPredicate(criteriaBuilder, root));
-//            }
-//            catch (Exception e) {
-//
-//            }
-//        }
-//
-//        query.where(predicates.toArray(new Predicate[0]));
-//
-//        return entityManager.createQuery(query).getResultList();
+        resolver.resolve(filters, criteriaBuilder, root);
+        List<Predicate> p = resolver.getPredicates();
+        resolver.clear();
+
+        query.where(p.toArray(new Predicate[0]));
+
+        return entityManager.createQuery(query).getResultList();
     }
 }
