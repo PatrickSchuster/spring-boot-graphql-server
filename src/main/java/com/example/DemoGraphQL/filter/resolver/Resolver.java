@@ -2,17 +2,11 @@ package com.example.DemoGraphQL.filter.resolver;
 
 import com.example.DemoGraphQL.filter.FilterFactory;
 import com.example.DemoGraphQL.filter.FilterInput;
-import com.example.DemoGraphQL.model.Book;
-import lombok.Getter;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,17 +26,17 @@ public class Resolver
         this.predicates = new ArrayList<>();
     }
 
-    public void resolve(FilterInput filterInput, CriteriaBuilder criteriaBuilder, Root root)
+    public void resolve(FilterInput filterInput, CriteriaBuilder criteriaBuilder, From root)
     {
-        if(filterInput.getAttribute() != null
-                && filterInput.getOperator() != null
-                && filterInput.getValue() != null)
-        {
-            try {
-                predicates.add(filterFactory.getInstance(filterInput).getPredicate(criteriaBuilder, root));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if(filterInput == null) {
+            return;
+        }
+
+        if(filterInput.getEq() != null) {
+            predicates.add(new Eq(filterInput.getEq().getAttribute(), filterInput.getEq().getValue()).getPredicate(criteriaBuilder, root));
+        }
+        else if(filterInput.getNeq() != null) {
+            predicates.add(new Neq(filterInput.getNeq().getAttribute(), filterInput.getNeq().getValue()).getPredicate(criteriaBuilder, root));
         }
 
         if(filterInput.getOr() != null) {

@@ -7,14 +7,14 @@ import javax.persistence.criteria.From;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class Eq extends AbstractFilter
+public class Neq extends AbstractFilter
 {
-    public Eq(String attribute, String value) {
+    public Neq(String attribute, String value) {
         super(attribute, value);
     }
 
     @Override
     public Predicate getPredicate(CriteriaBuilder criteriaBuilder, From root) {
-        return criteriaBuilder.equal(root.get(this.attribute), this.value);
+        return criteriaBuilder.notEqual(root.get(this.attribute), this.value);
     }
 }

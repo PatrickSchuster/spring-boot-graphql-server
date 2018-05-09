@@ -34,25 +34,26 @@ public class And
 
     public Predicate resolve(FilterInput filterInput)
     {
-        FilterFactory filterFactory = new FilterFactory();
-        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
-        Root<Book> root = query.from(Book.class);
-
-        if(filterInput.getValue() != null) {
-            try {
-                predicates.add(filterFactory.getInstance(filterInput).getPredicate(criteriaBuilder, root));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        if(filterInput.getAnd() != null) {
-            for (FilterInput f : filterInput.getAnd()) {
-                resolve(f);
-            }
-        }
-
-        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        return null;
+//        FilterFactory filterFactory = new FilterFactory();
+//        CriteriaBuilder criteriaBuilder = this.entityManager.getCriteriaBuilder();
+//        CriteriaQuery<Book> query = criteriaBuilder.createQuery(Book.class);
+//        Root<Book> root = query.from(Book.class);
+//
+//        if(filterInput.getValue() != null) {
+//            try {
+//                predicates.add(filterFactory.getInstance(filterInput).getPredicate(criteriaBuilder, root));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        if(filterInput.getAnd() != null) {
+//            for (FilterInput f : filterInput.getAnd()) {
+//                resolve(f);
+//            }
+//        }
+//
+//        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 }

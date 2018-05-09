@@ -65,5 +65,4 @@ public class Book {
     public int hashCode() {
         return id.hashCode();
     }
-
 }

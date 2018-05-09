@@ -1,5 +1,7 @@
 package com.example.DemoGraphQL.filter;
 
+import com.example.DemoGraphQL.filter.model.Eq;
+import com.example.DemoGraphQL.filter.model.Neq;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,15 +15,11 @@ public class FilterInput
 {
     @Getter
     @Setter
-    protected String attribute;
+    protected Eq eq;
 
     @Getter
     @Setter
-    protected String operator;
-
-    @Getter
-    @Setter
-    protected String value;
+    protected Neq neq;
 
     @Getter
     @Setter
