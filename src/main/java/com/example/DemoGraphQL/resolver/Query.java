@@ -1,28 +1,29 @@
 package com.example.DemoGraphQL.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.example.DemoGraphQL.model.Author;
 import com.example.DemoGraphQL.model.Book;
-import com.example.DemoGraphQL.repository.AuthorRepository;
-import com.example.DemoGraphQL.repository.BookRepository;
+import org.jooq.DSLContext;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static com.example.DemoGraphQL.tables.Book.BOOK;
 
 /**
  * To define the operations of the root Query type.
  */
 public class Query implements GraphQLQueryResolver {
 
-    private BookRepository bookRepository;
-    private AuthorRepository authorRepository;
+    @Autowired
+    private DSLContext dslContext;
 
-    public Query(AuthorRepository authorRepository, BookRepository bookRepository) {
-        this.authorRepository = authorRepository;
-        this.bookRepository = bookRepository;
+    public Query() {
+
     }
 
     public Iterable<Book> findAllBooks() {
-        return bookRepository.findAll();
+        return dslContext.selectFrom(BOOK).where(BOOK.AUTHOR_ID.eq(new Long(1))).orderBy(BOOK.ID.asc()).fetch().into(Book.class);
     }
 
+    /*
     public Book findBookWithId(Long id){
         return bookRepository.findOne(id);
     }
@@ -38,5 +39,6 @@ public class Query implements GraphQLQueryResolver {
     public long countAuthors() {
         return authorRepository.count();
     }
+    */
 
 }

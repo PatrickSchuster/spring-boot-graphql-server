@@ -58,6 +58,17 @@
 			<version>3.10.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jooq</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jooq</groupId>
+			<artifactId>jooq-codegen</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 		<!--
 		To parse GraphQL schemas instead of describing your types programmatically.
 		This library also maps them automatically to Java objects.
@@ -95,8 +106,120 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>gensrc/main/java</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>generate</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>generate-jooq-utils</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>compile</goal>
+								</goals>
+								<inherited>false</inherited>
+								<configuration>
+									<includes>
+										<include>example/DemoGraphQL/util/**</include>
+									</includes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>sql-maven-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>com.h2database</groupId>
+								<artifactId>h2</artifactId>
+								<version>${h2.version}</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<driver>org.h2.Driver</driver>
+							<url>jdbc:h2:~/springbootjooq</url>
+							<srcFiles>
+								<srcFile>${basedir}/src/main/resources/reset.sql</srcFile>
+								<srcFile>${basedir}/src/main/resources/schema.sql</srcFile>
+							</srcFiles>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.jooq</groupId>
+						<artifactId>jooq-codegen-maven</artifactId>
+						<executions>
+							<execution>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>com.h2database</groupId>
+								<artifactId>h2</artifactId>
+								<version>${h2.version}</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<jdbc>
+								<driver>org.h2.Driver</driver>
+								<url>jdbc:h2:~/springbootjooq</url>
+							</jdbc>
+							<generator>
+								<database>
+									<name>org.jooq.util.h2.H2Database</name>
+									<includes>.*</includes>
+									<excludes />
+									<inputSchema>PUBLIC</inputSchema>
+								</database>
+								<target>
+									<packageName>com.example.DemoGraphQL</packageName>
+									<directory>${basedir}/gensrc/main/java</directory>
+								</target>
+								<generate>
+									<records>false</records>
+								</generate>
+							</generator>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
