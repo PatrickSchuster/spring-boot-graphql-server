@@ -3,6 +3,8 @@ package com.example.DemoGraphQL.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jooq.TableLike;
+import org.jooq.util.xml.jaxb.Table;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,32 +16,31 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @NoArgsConstructor
-public class Book {
+public class Book extends Model {
 
     @Id
-    @Column(name = "book_id", nullable = false)
+    @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     private Long id;
 
-    @Column(name = "book_title", nullable = false)
+    @Column(name = "TITLE", nullable = false)
     @Getter
     @Setter
     private String title;
 
-    @Column(name = "book_isbn", nullable = false)
+    @Column(name = "ISBN", nullable = false)
     @Getter
     @Setter
     private String isbn;
 
-    @Column(name = "book_pageCount", nullable = false)
+    @Column(name = "PAGECOUNT", nullable = false)
     @Getter
     @Setter
     private int pageCount;
 
     @ManyToOne
-    @JoinColumn(name = "author_id",
-            nullable = false, updatable = false)
+    @JoinColumn(name = "AUTHOR_ID", nullable = false, updatable = false)
     @Getter
     @Setter
     private Author author;

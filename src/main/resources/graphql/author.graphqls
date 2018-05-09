@@ -4,22 +4,33 @@ type Author {
     lastName: String!
 }
 
+type Book {
+    id: ID!
+    title: String!
+    isbn: String!
+    pageCount: Int!
+    author: Author!
+}
+
 type Query {
     findAllAuthors(filter: AuthorFilter): [Author]!
-    #findAuthors(filter: [AllPurposeFilter]): [Author]
-    findAuthors(filter: [Operand]): [Author]
+    findAuthors(filter: [Filter!]): [Author]
     countAuthors: Long!
+    findBooks(filter: [Filter!], orderBy: OrderBy): [Book]
+    countBooks: Long!
+    findBookWithId(id: ID): Book
 }
 
-input Operand {
-    operand: String!
-    filters: [AllPurposeFilter]!
-}
-
-input AllPurposeFilter {
-    firstProperty: String!
+input Filter {
+    operand: String
+    key: String!
     operator: String!
-    secondProperty: String!
+    value: String!
+}
+
+input OrderBy {
+    field: String!
+    direction: String!
 }
 
 input AuthorFilter {

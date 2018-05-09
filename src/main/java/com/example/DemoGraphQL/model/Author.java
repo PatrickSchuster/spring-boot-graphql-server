@@ -12,10 +12,10 @@ import javax.persistence.Id;
 
 @Entity
 @NoArgsConstructor
-public class Author {
+public class Author extends Model {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     @Setter

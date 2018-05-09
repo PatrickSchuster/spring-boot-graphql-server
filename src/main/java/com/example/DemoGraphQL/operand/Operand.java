@@ -1,6 +1,6 @@
 package com.example.DemoGraphQL.operand;
 
-import com.example.DemoGraphQL.filter.AllPurposeFilter;
+import com.example.DemoGraphQL.filter.Filter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 public class Operand {
 
     private String operand;
-    private List<AllPurposeFilter> filters;
+    private List<Filter> filters;
 
     @JsonProperty("operand")
     public String getOperand(){
@@ -16,7 +16,7 @@ public class Operand {
     }
 
     @JsonProperty("filters")
-    public List<AllPurposeFilter> getFilters(){
+    public List<Filter> getFilters(){
         return this.filters;
     }
 
