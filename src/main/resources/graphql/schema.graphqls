@@ -12,7 +12,30 @@ type Book {
     author: Author
 }
 
+input FilterInput {
+    eq: Eq
+    neq: Neq
+    and: [FilterInput!]
+    or: [FilterInput!]
+}
+
+input Eq {
+    attribute: String!
+    value: String!
+}
+
+input Neq {
+    attribute: String!
+    value: String!
+}
+
+enum Operator {
+    AND
+    OR
+}
+
 type Query {
+    findBooks(where: FilterInput, operator: Operator, author: FilterInput): [Book]
     findAllBooks: [Book]!
     findAllAuthors: [Author]!
     countAuthors: Int!

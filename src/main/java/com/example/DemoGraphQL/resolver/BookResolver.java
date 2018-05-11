@@ -23,12 +23,10 @@ public class BookResolver implements GraphQLResolver<Book> {
 
     public Author getAuthor(Book book) {
         return jooq.select()
-                .from(BOOK)
-                .join(AUTHOR)
+                .from(AUTHOR)
+                .join(BOOK)
                 .on(AUTHOR.ID.eq(BOOK.AUTHOR_ID))
                 .where(BOOK.ID.eq(book.getId()))
-                .fetchOne()
-                .into(Author.class);
+                .fetchOneInto(Author.class);
     }
-
 }

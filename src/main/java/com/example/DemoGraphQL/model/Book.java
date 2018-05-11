@@ -6,7 +6,8 @@ import lombok.Setter;
 import org.jooq.Record;
 import org.jooq.TableField;
 
-import static com.example.DemoGraphQL.tables.Book.BOOK;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 @NoArgsConstructor
 public class Book {
@@ -51,21 +52,5 @@ public class Book {
     public int hashCode() {
         return id.hashCode();
     }
-
-    public static TableField<Record, String> getTitleJooqTableField() {
-        return BOOK.TITLE;
-    }
-
-    public static TableField<Record, Long> getIdJooqTableField() {
-        return BOOK.ID;
-    }
-
-    public static TableField<Record, String> getIsbnJooqTableField() {
-        return BOOK.ISBN;
-    }
-
-    public static TableField<Record, Integer> getPageCountJooqTableField() {
-        return BOOK.PAGE_COUNT;
-    }
-
+  
 }
