@@ -1,10 +1,14 @@
-
+type Author {
+    id: ID!
+    firstName: String!
+    lastName: String!
+}
 
 type Book {
     id: ID!
     title: String!
     isbn: String!
-    pageCount: Int
+    pageCount: Int!
     author: Author
 }
 
@@ -31,11 +35,9 @@ enum Operator {
     OR
 }
 
-
 extend type Query {
     findBooks(where: FilterInput, operator: Operator, author: FilterInput): [Book]
     findAllBooks: [Book]!
     countBooks: Long!
     findBookWithId(id: ID): Book
 }
-

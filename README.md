@@ -9,12 +9,14 @@ Access graphql by visiting [http://localhost:8080/graphql](http://localhost:8080
 # Sample queries:
 
 ```javascript
-findAllBooks {
-  id
-  title
-  author {
-    firstName
-    lastName
+{
+  findAllBooks {
+    id
+    title
+    author {
+      firstName
+      lastName
+    }
   }
 }
 ```

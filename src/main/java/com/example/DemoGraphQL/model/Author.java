@@ -10,22 +10,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
 @NoArgsConstructor
 public class Author {
 
-    @Id
-    @Column(name = "book_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     private Long id;
 
-    @Column(name = "author_first_name", nullable = false)
     @Getter
     @Setter
     private String firstName;
 
-    @Column(name = "author_last_name", nullable = false)
     @Getter
     @Setter
     private String lastName;

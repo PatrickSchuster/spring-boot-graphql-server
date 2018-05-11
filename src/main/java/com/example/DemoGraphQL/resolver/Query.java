@@ -1,23 +1,9 @@
 package com.example.DemoGraphQL.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.example.DemoGraphQL.filter.FilterFactory;
-import com.example.DemoGraphQL.filter.FilterInput;
-import com.example.DemoGraphQL.filter.resolver.Resolver;
-import com.example.DemoGraphQL.model.Author;
 import com.example.DemoGraphQL.model.Book;
-import com.example.DemoGraphQL.repository.AuthorRepository;
-import com.example.DemoGraphQL.repository.BookRepository;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
-import java.util.List;
-import java.util.logging.Filter;
 
 import static com.example.DemoGraphQL.tables.Book.BOOK;
 
@@ -30,26 +16,21 @@ public class Query implements GraphQLQueryResolver {
     private EntityManager entityManager;
 
     @Autowired
-    private DSLContext dsl;
+    private DSLContext dslContext;
 
     private FilterFactory filterFactory;
-
-    private BookRepository bookRepository;
-    private AuthorRepository authorRepository;
     private Resolver resolver;
 
     public enum Operator {
         AND, OR
     }
 
-    public Query(AuthorRepository authorRepository, BookRepository bookRepository, Resolver resolver) {
-        this.authorRepository = authorRepository;
-        this.bookRepository = bookRepository;
-        this.resolver = resolver;
+    public Query() {
+
     }
 
     public Iterable<Book> findAllBooks() {
-        return bookRepository.findAll();
+        return dslContext.selectFrom(BOOK).where(BOOK.AUTHOR_ID.eq(new Long(1))).orderBy(BOOK.ID.asc()).fetch().into(Book.class);
     }
 
     public Book findBookWithId(Long id){

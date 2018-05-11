@@ -12,34 +12,25 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity
 @NoArgsConstructor
 public class Book {
 
-    @Id
-    @Column(name = "book_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     private Long id;
 
-    @Column(name = "book_title", nullable = false)
     @Getter
     @Setter
     private String title;
 
-    @Column(name = "book_isbn", nullable = false)
     @Getter
     @Setter
     private String isbn;
 
-    @Column(name = "book_pageCount", nullable = false)
     @Getter
     @Setter
     private int pageCount;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id",
-            nullable = false, updatable = false)
     @Getter
     @Setter
     private Author author;
