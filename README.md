@@ -6,6 +6,9 @@ To run, execute `com.example.DemoGraphQL.DemoGraphQlApplication`.
 
 Access graphql by visiting [http://localhost:8080/graphql](http://localhost:8080/graphql) in e.g. POSTMAN or visit [http://localhost:8080/graphiql](http://localhost:8080/graphiql) for the graphiql browser interface.
 
+# JOOQ
+Check out my [jooq_experiments](https://github.com/PatrickSchuster/spring-boot-graphql-server/tree/jooq_experiments) branch where I have set up JOOQ to work with graphQL queries.
+
 # Sample queries:
 
 ```javascript
