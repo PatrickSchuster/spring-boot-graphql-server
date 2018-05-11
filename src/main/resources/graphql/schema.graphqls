@@ -37,4 +37,14 @@ enum Operator {
 type Query {
     findBooks(where: FilterInput, operator: Operator, author: FilterInput): [Book]
     findAllBooks: [Book]!
+    findAllAuthors: [Author]!
+    countAuthors: Int!
+    countBooks: Int!
+
+    findBooks(orderBy: OrderBy): [Book]
+}
+
+input OrderBy {
+    field: String!
+    direction: String!
 }

@@ -1,15 +1,20 @@
 package com.example.DemoGraphQL.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+
 import com.example.DemoGraphQL.filter.FilterInput;
 import com.example.DemoGraphQL.filter.resolver.Resolver;
 import com.example.DemoGraphQL.model.Book;
 import org.jooq.Condition;
-import org.jooq.DSLContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import com.example.DemoGraphQL.model.Author;
+import com.example.DemoGraphQL.model.Book;
+import com.example.DemoGraphQL.order.OrderBy;
+
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.TableField;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static com.example.DemoGraphQL.tables.Author.AUTHOR;
@@ -21,11 +26,8 @@ import static com.example.DemoGraphQL.tables.Book.BOOK;
  */
 public class Query implements GraphQLQueryResolver {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
-    private DSLContext dslContext;
+    private DSLContext jooq;
 
     private Resolver resolver;
 
@@ -45,8 +47,7 @@ public class Query implements GraphQLQueryResolver {
                 .into(Book.class);
     }
 
-    public Iterable<Book> findBooks(FilterInput filters)
-    {
+    public Iterable<Book> findBooks(FilterInput filters){
         resolver.resolve(BOOK, filters);
 
         return dslContext
@@ -56,11 +57,9 @@ public class Query implements GraphQLQueryResolver {
                 .into(Book.class);
     }
 
-    public Iterable<Book> findBooks(FilterInput filters, Operator operator, FilterInput author)
-    {
+    public Iterable<Book> findBooks(FilterInput filters, Operator operator, FilterInput author){
         resolver.resolve(BOOK, filters);
         List<Condition> b = resolver.getConditions();
-
         resolver.resolve(AUTHOR, author);
         b.addAll(resolver.getConditions());
 
@@ -72,4 +71,13 @@ public class Query implements GraphQLQueryResolver {
                 .fetch()
                 .into(Book.class);
     }
+  
+    public long countBooks() {
+        return jooq.selectCount().from(BOOK).fetchOne(0, int.class);
+    }
+
+    public long countAuthors() {
+        return jooq.selectCount().from(AUTHOR).fetchOne(0, int.class);
+    }
+  
 }
