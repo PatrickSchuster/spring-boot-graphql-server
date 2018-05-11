@@ -29,15 +29,12 @@ input Neq {
     value: String!
 }
 
-
 enum Operator {
     AND
     OR
 }
 
-extend type Query {
+type Query {
     findBooks(where: FilterInput, operator: Operator, author: FilterInput): [Book]
     findAllBooks: [Book]!
-    countBooks: Long!
-    findBookWithId(id: ID): Book
 }

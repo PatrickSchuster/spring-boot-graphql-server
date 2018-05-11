@@ -1,62 +1,59 @@
 package com.example.DemoGraphQL.filter.resolver;
 
-import com.example.DemoGraphQL.filter.FilterFactory;
 import com.example.DemoGraphQL.filter.FilterInput;
+import org.jooq.Condition;
+import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class Resolver
 {
-    @PersistenceContext
-    private EntityManager entityManager;
+    private List<Condition> conditions;
 
-    private FilterFactory filterFactory;
-
-    private List<Predicate> predicates;
-
-    private Resolver(FilterFactory filterFactory)
+    private Resolver()
     {
-        this.filterFactory = filterFactory;
-        this.predicates = new ArrayList<>();
+        this.conditions = new ArrayList<>();
     }
 
-    public void resolve(FilterInput filterInput, CriteriaBuilder criteriaBuilder, From root)
+    public void resolve(TableImpl root, FilterInput filterInput)
     {
         if(filterInput == null) {
             return;
         }
 
         if(filterInput.getEq() != null) {
-            predicates.add(new Eq(filterInput.getEq().getAttribute(), filterInput.getEq().getValue()).getPredicate(criteriaBuilder, root));
+            Condition c = new Eq(filterInput.getEq().getAttribute(), filterInput.getEq().getValue()).getCondition(root);
+            if(c != null) {
+                conditions.add(c);
+            }
+
         }
         else if(filterInput.getNeq() != null) {
-            predicates.add(new Neq(filterInput.getNeq().getAttribute(), filterInput.getNeq().getValue()).getPredicate(criteriaBuilder, root));
+            Condition c = new Neq(filterInput.getNeq().getAttribute(), filterInput.getNeq().getValue()).getCondition(root);
+            if(c != null) {
+                conditions.add(c);
+            }
         }
 
         if(filterInput.getOr() != null) {
             for(FilterInput or: filterInput.getOr()) {
-                resolve(or, criteriaBuilder, root);
+                resolve(root, or);
             }
         }
 
         if(filterInput.getAnd() != null) {
             for(FilterInput and: filterInput.getAnd()) {
-                resolve(and, criteriaBuilder, root);
+                resolve(root, and);
             }
         }
     }
 
-    public List<Predicate> getPredicates() {
-        return new ArrayList<>(predicates);
-    }
-
-    public void clear() {
-        predicates.clear();
+    public List<Condition> getConditions() {
+        ArrayList<Condition> c = new ArrayList<>(conditions);
+        conditions.clear();
+        return c;
     }
 }

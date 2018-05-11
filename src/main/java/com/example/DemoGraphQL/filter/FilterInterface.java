@@ -1,12 +1,8 @@
 package com.example.DemoGraphQL.filter;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import org.jooq.Condition;
+import org.jooq.impl.TableImpl;
 
 public interface FilterInterface {
-    Predicate getPredicate(CriteriaBuilder criteriaBuilder, From root);
-
-
+    Condition getCondition(TableImpl root);
 }

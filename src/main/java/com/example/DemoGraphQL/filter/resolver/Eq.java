@@ -1,11 +1,9 @@
 package com.example.DemoGraphQL.filter.resolver;
 
 import com.example.DemoGraphQL.filter.AbstractFilter;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import org.jooq.Condition;
+import org.jooq.Field;
+import org.jooq.impl.TableImpl;
 
 public class Eq extends AbstractFilter
 {
@@ -14,7 +12,13 @@ public class Eq extends AbstractFilter
     }
 
     @Override
-    public Predicate getPredicate(CriteriaBuilder criteriaBuilder, From root) {
-        return criteriaBuilder.equal(root.get(this.attribute), this.value);
+    public Condition getCondition(TableImpl root)
+    {
+        Field field = root.field(attribute.toUpperCase());
+        if(field != null) {
+            return field.eq(value);
+        }
+
+        return null;
     }
 }

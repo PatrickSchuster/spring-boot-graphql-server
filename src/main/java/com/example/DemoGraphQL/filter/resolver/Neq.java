@@ -1,11 +1,8 @@
 package com.example.DemoGraphQL.filter.resolver;
 
 import com.example.DemoGraphQL.filter.AbstractFilter;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import org.jooq.Condition;
+import org.jooq.impl.TableImpl;
 
 public class Neq extends AbstractFilter
 {
@@ -14,7 +11,7 @@ public class Neq extends AbstractFilter
     }
 
     @Override
-    public Predicate getPredicate(CriteriaBuilder criteriaBuilder, From root) {
-        return criteriaBuilder.notEqual(root.get(this.attribute), this.value);
+    public Condition getCondition(TableImpl root) {
+        return null;
     }
 }
