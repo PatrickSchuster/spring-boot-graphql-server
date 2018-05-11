@@ -6,8 +6,8 @@ import com.example.DemoGraphQL.model.Book;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.example.DemoGraphQL.tables.Book.BOOK;
 import static com.example.DemoGraphQL.tables.Author.AUTHOR;
+import static com.example.DemoGraphQL.tables.Book.BOOK;
 
 /**
  * Resolver for the complex fields of the Book entity. In this case: only the "author" field of a Book.

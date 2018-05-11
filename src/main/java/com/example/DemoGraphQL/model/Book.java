@@ -3,11 +3,6 @@ package com.example.DemoGraphQL.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.jooq.Record;
-import org.jooq.TableField;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 
 @NoArgsConstructor
 public class Book {
@@ -52,5 +47,5 @@ public class Book {
     public int hashCode() {
         return id.hashCode();
     }
-  
+
 }
