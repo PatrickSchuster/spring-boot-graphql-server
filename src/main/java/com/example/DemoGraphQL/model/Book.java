@@ -3,19 +3,14 @@ package com.example.DemoGraphQL.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jooq.Record;
+import org.jooq.TableField;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import static com.example.DemoGraphQL.tables.Book.BOOK;
 
 @NoArgsConstructor
 public class Book {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     private Long id;
 
@@ -55,6 +50,22 @@ public class Book {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public static TableField<Record, String> getTitleJooqTableField() {
+        return BOOK.TITLE;
+    }
+
+    public static TableField<Record, Long> getIdJooqTableField() {
+        return BOOK.ID;
+    }
+
+    public static TableField<Record, String> getIsbnJooqTableField() {
+        return BOOK.ISBN;
+    }
+
+    public static TableField<Record, Integer> getPageCountJooqTableField() {
+        return BOOK.PAGE_COUNT;
     }
 
 }
