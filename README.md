@@ -33,7 +33,8 @@ Will yield all books (with their title, isbn, id and pageCount) as well as their
 
 
 ```javascript
-findBooks(orderBy: {
+{
+  findBooks(orderBy: {
     field: "pageCount"
     direction: "ASC"
   }){
@@ -43,7 +44,7 @@ findBooks(orderBy: {
       firstName
       lastName
     }
-  }
+}
 ```
 
 Will yield all books (with their pageCount, title) as well as their author (with first and last name) ordered by pageCount in ascending order.
