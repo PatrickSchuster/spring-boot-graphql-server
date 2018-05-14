@@ -2,15 +2,12 @@ package com.example.DemoGraphQL.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.filter.FilterInput;
-import com.example.DemoGraphQL.filter.resolver.Resolver;
+import com.example.DemoGraphQL.filter.resolver.RootResolver;
 import com.example.DemoGraphQL.model.Book;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.List;
 
 import static com.example.DemoGraphQL.tables.Author.AUTHOR;
 import static com.example.DemoGraphQL.tables.Book.BOOK;
@@ -19,22 +16,19 @@ import static com.example.DemoGraphQL.tables.Book.BOOK;
 /**
  * To define the operations of the root Query type.
  */
-public class Query implements GraphQLQueryResolver {
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
+public class Query implements GraphQLQueryResolver
+{
     @Autowired
     private DSLContext dslContext;
 
-    private Resolver resolver;
+    private RootResolver rootResolver;
 
     public enum Operator {
         AND, OR
     }
 
-    public Query(Resolver resolver) {
-        this.resolver = resolver;
+    public Query(RootResolver rootResolver) {
+        this.rootResolver = rootResolver;
     }
 
     public Iterable<Book> findAllBooks() {
@@ -47,28 +41,39 @@ public class Query implements GraphQLQueryResolver {
 
     public Iterable<Book> findBooks(FilterInput filters)
     {
-        resolver.resolve(BOOK, filters);
+        rootResolver.resolve(BOOK, filters);
 
         return dslContext
                 .selectFrom(BOOK)
-                .where(resolver.getConditions())
+                .where(rootResolver.getCondition())
                 .fetch()
                 .into(Book.class);
     }
 
     public Iterable<Book> findBooks(FilterInput filters, Operator operator, FilterInput author)
     {
-        resolver.resolve(BOOK, filters);
-        List<Condition> b = resolver.getConditions();
+        rootResolver.resolve(BOOK, filters);
+        Condition a = rootResolver.getCondition();
 
-        resolver.resolve(AUTHOR, author);
-        b.addAll(resolver.getConditions());
+        rootResolver.resolve(AUTHOR, author);
+        Condition b = rootResolver.getCondition();
+
+        Condition finalCondition;
+        switch (operator) {
+            case OR:
+                finalCondition = DSL.or(a, b);
+                break;
+            default:
+            case AND:
+                finalCondition = DSL.and(a, b);
+                break;
+        }
 
         return dslContext
                 .select(BOOK.fields())
                 .from(BOOK)
                 .join(AUTHOR).onKey()
-                .where(b)
+                .where(finalCondition)
                 .fetch()
                 .into(Book.class);
     }

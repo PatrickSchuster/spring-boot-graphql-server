@@ -12,21 +12,23 @@ type Book {
     author: Author
 }
 
-input FilterInput {
-    eq: Eq
-    neq: Neq
+input FilterInput
+{
+    # scalar fields
+    # ----------------------
+    # Equals
+    eq: [String!]
+    # Not Equals
+    ne: [String!]
+    # Like
+    like: [String!]
+    # Less Than
+    lt: [String!]
+
+    # recursive operators
+    # ----------------------
     and: [FilterInput!]
     or: [FilterInput!]
-}
-
-input Eq {
-    attribute: String!
-    value: String!
-}
-
-input Neq {
-    attribute: String!
-    value: String!
 }
 
 enum Operator {
@@ -35,6 +37,6 @@ enum Operator {
 }
 
 type Query {
-    findBooks(where: FilterInput, operator: Operator, author: FilterInput): [Book]
+    findBooks(where: FilterInput, operator: Operator = "AND", author: FilterInput): [Book]
     findAllBooks: [Book]!
 }

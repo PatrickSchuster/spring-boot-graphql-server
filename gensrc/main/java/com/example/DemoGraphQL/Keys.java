@@ -6,13 +6,12 @@ package com.example.DemoGraphQL;
 
 import com.example.DemoGraphQL.tables.Author;
 import com.example.DemoGraphQL.tables.Book;
-
-import javax.annotation.Generated;
-
 import org.jooq.ForeignKey;
 import org.jooq.Record;
 import org.jooq.UniqueKey;
 import org.jooq.impl.AbstractKeys;
+
+import javax.annotation.Generated;
 
 
 /**
