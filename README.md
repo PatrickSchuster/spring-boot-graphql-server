@@ -35,21 +35,18 @@ Will yield all books (with their title, isbn, id and pageCount) as well as their
 ```javascript
 {
   findBooks(where:{
-		and:[
-      {eq: {attribute:"id", value:"10"}},
-      {eq: {attribute:"isbn", value:"1223"}},
-    ]
-  }, author:{
-    and:[
-      {eq: {attribute:"id", value:"1"}},
-      {eq: {attribute:"last_name", value:"King"}}
+  or:[
+      {eq:["id","10"]},
+      {like: ["title", "Illum%"]},
+      {and:[
+        {eq:["page_count", "900"]},
+        {eq:["isbn", "2222"]},
+      ]}
     ]
   }) {
     id
     title
-    pageCount
     author{
-      id
       firstName
       lastName
     }
@@ -57,4 +54,4 @@ Will yield all books (with their title, isbn, id and pageCount) as well as their
 }
 ```
 
-Will yield all books (with their id, title, pageCount and author (with id, first and lastname)) WHERE (id = 10 AND isbn = 1223) AND (author.ID = 1 AND author.last_name = King).
+Will yield all books (with their id, title and author (first and lastname)) WHERE (id = 10 OR title = Illum%) OR (page_count = 900 AND ISBN = 2222).
