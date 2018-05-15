@@ -27,6 +27,7 @@ public class BookResolver implements GraphQLResolver<Book> {
                 .join(BOOK)
                 .on(AUTHOR.ID.eq(BOOK.AUTHOR_ID))
                 .where(BOOK.ID.eq(book.getId()))
-                .fetchOneInto(Author.class);
+                .fetchOneInto(AUTHOR)
+                .into(Author.class);
     }
 }

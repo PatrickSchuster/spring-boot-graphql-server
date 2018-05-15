@@ -3,6 +3,7 @@ package com.example.DemoGraphQL.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.filter.FilterInput;
 import com.example.DemoGraphQL.filter.resolver.RootResolver;
+import com.example.DemoGraphQL.model.Author;
 import com.example.DemoGraphQL.model.Book;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -69,7 +70,7 @@ public class Query implements GraphQLQueryResolver {
                 .join(AUTHOR).onKey()
                 .where(finalCondition)
                 .fetch()
-                .into(Book.class);
+                .into(BOOK).into(Book.class);
     }
 
     public long countBooks() {
