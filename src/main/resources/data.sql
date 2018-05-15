@@ -7,3 +7,5 @@ INSERT INTO book VALUES (20, 'The Shining', '1333', 800, 1);
 INSERT INTO book VALUES (30, 'Misery', '4531', 700, 1);
 INSERT INTO book VALUES (40, 'And then there were none', '12352', 400, 2);
 INSERT INTO book VALUES (50, 'Illuminati', '2222', 900, 3);
+INSERT INTO book VALUES (60, 'Illuminati 2', '2222', 900, 2);
+INSERT INTO book VALUES (70, 'Illuminati 3', '2223', 900, 3);

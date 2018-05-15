@@ -1,7 +1,5 @@
 package com.example.DemoGraphQL.filter;
 
-import com.example.DemoGraphQL.filter.model.Eq;
-import com.example.DemoGraphQL.filter.model.Neq;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,16 +9,8 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public class FilterInput
+public class FilterInput extends ScalarFilterInput
 {
-    @Getter
-    @Setter
-    protected Eq eq;
-
-    @Getter
-    @Setter
-    protected Neq neq;
-
     @Getter
     @Setter
     protected List<FilterInput> and;
