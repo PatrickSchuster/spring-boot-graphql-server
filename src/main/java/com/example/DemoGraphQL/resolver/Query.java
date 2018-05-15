@@ -16,10 +16,10 @@ import static com.example.DemoGraphQL.tables.Book.BOOK;
 /**
  * To define the operations of the root Query type.
  */
-public class Query implements GraphQLQueryResolver
-{
+public class Query implements GraphQLQueryResolver {
+
     @Autowired
-    private DSLContext dslContext;
+    private DSLContext jooq;
 
     private RootResolver rootResolver;
 
@@ -32,17 +32,14 @@ public class Query implements GraphQLQueryResolver
     }
 
     public Iterable<Book> findAllBooks() {
-        return dslContext
-                .selectFrom(BOOK)
+        return jooq.selectFrom(BOOK)
                 .orderBy(BOOK.ID.asc())
                 .fetch()
                 .into(Book.class);
     }
 
-    public Iterable<Book> findBooks(FilterInput filters)
-    {
+    public Iterable<Book> findBooks(FilterInput filters){
         rootResolver.resolve(BOOK, filters);
-
         return dslContext
                 .selectFrom(BOOK)
                 .where(rootResolver.getCondition())
@@ -50,8 +47,7 @@ public class Query implements GraphQLQueryResolver
                 .into(Book.class);
     }
 
-    public Iterable<Book> findBooks(FilterInput filters, Operator operator, FilterInput author)
-    {
+    public Iterable<Book> findBooks(FilterInput filters, Operator operator, FilterInput author){
         rootResolver.resolve(BOOK, filters);
         Condition a = rootResolver.getCondition();
 
@@ -69,12 +65,20 @@ public class Query implements GraphQLQueryResolver
                 break;
         }
 
-        return dslContext
-                .select(BOOK.fields())
+        return jooq.select(BOOK.fields())
                 .from(BOOK)
                 .join(AUTHOR).onKey()
                 .where(finalCondition)
                 .fetch()
                 .into(Book.class);
     }
+
+    public long countBooks() {
+        return jooq.selectCount().from(BOOK).fetchOne(0, int.class);
+    }
+
+    public long countAuthors() {
+        return jooq.selectCount().from(AUTHOR).fetchOne(0, int.class);
+    }
+
 }

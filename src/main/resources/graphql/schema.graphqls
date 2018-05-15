@@ -39,4 +39,6 @@ enum Operator {
 type Query {
     findBooks(where: FilterInput, operator: Operator = "AND", author: FilterInput): [Book]
     findAllBooks: [Book]!
+    countAuthors: Int!
+    countBooks: Int!
 }

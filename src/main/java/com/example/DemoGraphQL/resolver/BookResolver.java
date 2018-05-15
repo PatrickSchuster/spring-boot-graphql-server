@@ -22,9 +22,7 @@ public class BookResolver implements GraphQLResolver<Book> {
     }
 
     public Author getAuthor(Book book) {
-
-        return jooq
-                .select()
+        return jooq.select()
                 .from(AUTHOR)
                 .join(BOOK)
                 .on(AUTHOR.ID.eq(BOOK.AUTHOR_ID))

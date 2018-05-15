@@ -1,8 +1,14 @@
 # graphql-java-spring-boot-example
-Stripped down Spring Boot Application based on this tutorial: [Building a GraphQL Server with Spring Boot](https://www.pluralsight.com/guides/java-and-j2ee/building-a-graphql-server-with-spring-boot). 
+Spring Boot Application implementing a GraphQL server and querying an internal H2 database using JOOQ.
 
+# Running
+To build the JOOQ schema generated from the schema.sql, execute this maven command:
 
-To run, execute `com.example.DemoGraphQL.DemoGraphQlApplication`.
+```$ mvn clean generate-sources -Pgenerate```
+
+This will generate the tables in the gensrc directory.
+
+To run the Spring Boot Application itself, execute `com.example.DemoGraphQL.DemoGraphQlApplication`.
 
 Access graphql by visiting [http://localhost:8080/graphql](http://localhost:8080/graphql) in e.g. POSTMAN or visit [http://localhost:8080/graphiql](http://localhost:8080/graphiql) for the graphiql browser interface.
 
@@ -10,14 +16,45 @@ Access graphql by visiting [http://localhost:8080/graphql](http://localhost:8080
 
 ```javascript
 {
-  findAllBooks {
-    id
+  findAllBooks{
     title
-    author {
+    isbn
+    id
+    pageCount
+    author{
+      id
       firstName
       lastName
     }
   }
 }
 ```
-will yield all books (with their id, title and author), where the author's first and last name will be shown.
+Will yield all books (with their title, isbn, id and pageCount) as well as their author (with their id, first and last name).
+
+
+```javascript
+{
+  findBooks(where:{
+		and:[
+      {eq: {attribute:"id", value:"10"}},
+      {eq: {attribute:"isbn", value:"1223"}},
+    ]
+  }, author:{
+    and:[
+      {eq: {attribute:"id", value:"1"}},
+      {eq: {attribute:"last_name", value:"King"}}
+    ]
+  }) {
+    id
+    title
+    pageCount
+    author{
+      id
+      firstName
+      lastName
+    }
+  }
+}
+```
+
+Will yield all books (with their id, title, pageCount and author (with id, first and lastname)) WHERE (id = 10 AND isbn = 1223) AND (author.ID = 1 AND author.last_name = King).

@@ -4,13 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-
 @NoArgsConstructor
 public class Book {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     private Long id;
 
@@ -51,4 +47,5 @@ public class Book {
     public int hashCode() {
         return id.hashCode();
     }
+
 }
