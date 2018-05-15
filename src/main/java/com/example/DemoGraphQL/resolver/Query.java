@@ -40,8 +40,7 @@ public class Query implements GraphQLQueryResolver {
 
     public Iterable<Book> findBooks(FilterInput filters){
         rootResolver.resolve(BOOK, filters);
-        return dslContext
-                .selectFrom(BOOK)
+        return jooq.selectFrom(BOOK)
                 .where(rootResolver.getCondition())
                 .fetch()
                 .into(Book.class);
