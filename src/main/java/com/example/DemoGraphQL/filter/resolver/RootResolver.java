@@ -19,8 +19,12 @@ public class RootResolver
 {
     List<Condition> conditions;
 
-    RootResolver() {
+    private TableImplClassResolver tableImplClassResolver;
+
+    RootResolver(TableImplClassResolver tableImplClassResolver)
+    {
         this.conditions = new ArrayList<>();
+        this.tableImplClassResolver = tableImplClassResolver;
     }
 
     /**
@@ -40,7 +44,7 @@ public class RootResolver
         }
 
         if(filterInput.getOr() != null) {
-            RootResolver r = new Or();
+            RootResolver r = new Or(tableImplClassResolver);
             for(FilterInput or: filterInput.getOr()) {
                 r.resolve(root, or);
             }
@@ -48,7 +52,7 @@ public class RootResolver
         }
 
         if(filterInput.getAnd() != null) {
-            RootResolver r = new And();
+            RootResolver r = new And(tableImplClassResolver);
             for(FilterInput and: filterInput.getAnd()) {
                 r.resolve(root, and);
             }
@@ -76,16 +80,16 @@ public class RootResolver
     {
         AbstractFilter c = null;
         if(filterInput.getEq() != null) {
-            c = new Eq(root, filterInput.getEq().get(0), filterInput.getEq().get(1));
+            c = new Eq(root, filterInput.getEq(), tableImplClassResolver);
         }
         else if(filterInput.getNe() != null) {
-            c = new Ne(root, filterInput.getNe().get(0), filterInput.getNe().get(1));
+            c = new Ne(root, filterInput.getNe(), tableImplClassResolver);
         }
         else if(filterInput.getLike() != null) {
-            c = new Like(root, filterInput.getLike().get(0), filterInput.getLike().get(1));
+            c = new Like(root, filterInput.getLike(), tableImplClassResolver);
         }
         else if(filterInput.getLt() != null) {
-            c = new Lt(root, filterInput.getLt().get(0), filterInput.getLt().get(1));
+            c = new Lt(root, filterInput.getLt(), tableImplClassResolver);
         }
 
         return (c != null) ? c.getCondition() : null;

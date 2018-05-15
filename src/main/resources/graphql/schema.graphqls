@@ -24,6 +24,8 @@ input FilterInput
     like: [String!]
     # Less Than
     lt: [String!]
+    # greater Than
+    gt: [String!]
 
     # recursive operators
     # ----------------------
@@ -31,12 +33,13 @@ input FilterInput
     or: [FilterInput!]
 }
 
-enum Operator {
-    AND
-    OR
+input Options
+{
+    orderBy: [String!]
+    limit: Int!
 }
 
 type Query {
-    findBooks(where: FilterInput, operator: Operator = "AND", author: FilterInput): [Book]
+    findBooks(where: FilterInput): [Book]
     findAllBooks: [Book]!
 }
