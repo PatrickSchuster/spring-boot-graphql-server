@@ -14,8 +14,6 @@ type Book {
 
 input FilterInput
 {
-    # scalar fields
-    # ----------------------
     # Equals
     eq: [String!]
     # Not Equals
@@ -24,8 +22,12 @@ input FilterInput
     like: [String!]
     # Less Than
     lt: [String!]
-    # greater Than
+    # Less or equal
+    le: [String!]
+    # Greater Than
     gt: [String!]
+    # Greater or equal
+    ge: [String!]
     # in
     in: [String!]
     # not in
@@ -37,10 +39,11 @@ input FilterInput
     # is not null
     notNull: String
 
-    # recursive operators
-    # ----------------------
+    # AND operator
     and: [FilterInput!]
-    or: [FilterInput!]s
+
+    # OR operator
+    or: [FilterInput!]
 }
 
 input Options {

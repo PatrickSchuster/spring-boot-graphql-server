@@ -25,6 +25,18 @@ public class ScalarFilterInput
 
     @Getter
     @Setter
+    protected List<String> le;
+
+    @Getter
+    @Setter
+    private List<String> gt;
+
+    @Getter
+    @Setter
+    private List<String> ge;
+
+    @Getter
+    @Setter
     protected List<String> in;
 
     @Getter
