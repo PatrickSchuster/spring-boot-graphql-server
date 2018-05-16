@@ -22,4 +22,24 @@ public class ScalarFilterInput
     @Getter
     @Setter
     protected List<String> lt;
+
+    @Getter
+    @Setter
+    protected List<String> in;
+
+    @Getter
+    @Setter
+    private List<String> nin;
+
+    @Getter
+    @Setter
+    private List<String> between;
+
+    @Getter
+    @Setter
+    private String isNull;
+
+    @Getter
+    @Setter
+    private String notNull;
 }

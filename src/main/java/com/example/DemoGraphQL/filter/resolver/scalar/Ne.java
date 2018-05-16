@@ -1,13 +1,16 @@
 package com.example.DemoGraphQL.filter.resolver.scalar;
 
 import com.example.DemoGraphQL.filter.AbstractFilter;
+import com.example.DemoGraphQL.filter.resolver.TableImplClassResolver;
 import org.jooq.Condition;
 import org.jooq.impl.TableImpl;
 
+import java.util.List;
+
 public class Ne extends AbstractFilter
 {
-    public Ne(TableImpl root, String attribute, String value) {
-        super(root, attribute, value);
+    public Ne(TableImpl root, List<String> param, TableImplClassResolver tableImplClassResolver) {
+        super(root, param, tableImplClassResolver);
     }
 
     @Override

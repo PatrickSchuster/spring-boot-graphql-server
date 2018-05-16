@@ -7,10 +7,6 @@ import com.example.DemoGraphQL.model.Book;
 import com.example.DemoGraphQL.options.Options;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.SelectConditionStep;
-import org.jooq.SelectSeekStep1;
-import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.example.DemoGraphQL.tables.Author.AUTHOR;
@@ -27,27 +23,29 @@ public class Query implements GraphQLQueryResolver {
 
     private RootResolver rootResolver;
 
-    public enum Operator {
-        AND, OR
-    }
-
     public Query(RootResolver rootResolver) {
         this.rootResolver = rootResolver;
     }
 
     public Iterable<Book> findAllBooks() {
-        return jooq.selectFrom(BOOK)
+        return jooq
+                .selectFrom(BOOK)
                 .orderBy(BOOK.ID.asc())
                 .fetch()
+                .into(BOOK)
                 .into(Book.class);
     }
 
     public Iterable<Book> findBooks(FilterInput filters) {
         rootResolver.resolve(BOOK, filters);
-        return jooq.selectFrom(BOOK)
-                .where(rootResolver.getCondition())
+        Condition condition = rootResolver.getCondition();
+        return jooq
+                .select(BOOK.fields())
+                .from(BOOK)
+                .join(AUTHOR).onKey()
+                .where(condition)
                 .fetch()
-                .into(Book.class);
+                .into(BOOK).into(Book.class);
     }
 
     public Iterable<Book> findBooks(FilterInput filters, Operator operator, FilterInput author, Options options) {
@@ -88,8 +86,6 @@ public class Query implements GraphQLQueryResolver {
                     .into(BOOK).into(Book.class);
         }
         return selectWhereOrderBy
-                .fetch()
-                .into(BOOK).into(Book.class);
     }
 
     public long countBooks() {

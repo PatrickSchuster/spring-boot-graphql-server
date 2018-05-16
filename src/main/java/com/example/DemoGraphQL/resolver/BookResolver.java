@@ -17,17 +17,13 @@ public class BookResolver implements GraphQLResolver<Book> {
     @Autowired
     private DSLContext jooq;
 
-    public BookResolver() {
-
-    }
-
-    public Author getAuthor(Book book) {
-        return jooq.select()
+    public Author getAuthor(Book book){
+        return jooq
+                .select()
                 .from(AUTHOR)
                 .join(BOOK)
                 .on(AUTHOR.ID.eq(BOOK.AUTHOR_ID))
                 .where(BOOK.ID.eq(book.getId()))
-                .fetchOneInto(AUTHOR)
-                .into(Author.class);
+                .fetchOneInto(AUTHOR).into(Author.class);
     }
 }
