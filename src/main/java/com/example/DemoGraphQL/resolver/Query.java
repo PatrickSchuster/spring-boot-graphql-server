@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static com.example.DemoGraphQL.tables.Author.AUTHOR;
 import static com.example.DemoGraphQL.tables.Book.BOOK;
 
-
 /**
  * To define the operations of the root Query type.
  */
