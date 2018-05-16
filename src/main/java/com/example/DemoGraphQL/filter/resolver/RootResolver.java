@@ -2,10 +2,8 @@ package com.example.DemoGraphQL.filter.resolver;
 
 import com.example.DemoGraphQL.filter.AbstractFilter;
 import com.example.DemoGraphQL.filter.FilterInput;
-import com.example.DemoGraphQL.filter.resolver.scalar.Eq;
-import com.example.DemoGraphQL.filter.resolver.scalar.Like;
-import com.example.DemoGraphQL.filter.resolver.scalar.Lt;
-import com.example.DemoGraphQL.filter.resolver.scalar.Ne;
+import com.example.DemoGraphQL.filter.FilterInterface;
+import com.example.DemoGraphQL.filter.resolver.scalar.*;
 import org.jooq.Condition;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
@@ -78,7 +76,7 @@ public class RootResolver
      */
     private Condition resolveScalar(TableImpl root, FilterInput filterInput)
     {
-        AbstractFilter c = null;
+        FilterInterface c = null;
         if(filterInput.getEq() != null) {
             c = new Eq(root, filterInput.getEq(), tableImplClassResolver);
         }
@@ -90,6 +88,21 @@ public class RootResolver
         }
         else if(filterInput.getLt() != null) {
             c = new Lt(root, filterInput.getLt(), tableImplClassResolver);
+        }
+        else if(filterInput.getIn() != null) {
+            c = new In(root, filterInput.getIn(), tableImplClassResolver);
+        }
+        else if(filterInput.getNin() != null) {
+            c = new Nin(root, filterInput.getNin(), tableImplClassResolver);
+        }
+        else if(filterInput.getBetween() != null) {
+            c = new Between(root, filterInput.getBetween(), tableImplClassResolver);
+        }
+        else if(filterInput.getIsNull() != null) {
+            c = new IsNull(root, filterInput.getIsNull(), tableImplClassResolver);
+        }
+        else if(filterInput.getNotNull() != null) {
+            c = new NotNull(root, filterInput.getNotNull(), tableImplClassResolver);
         }
 
         return (c != null) ? c.getCondition() : null;

@@ -26,17 +26,21 @@ input FilterInput
     lt: [String!]
     # greater Than
     gt: [String!]
+    # in
+    in: [String!]
+    # not in
+    nin: [String!]
+    # between
+    between: [String!]
+    # is null
+    isNull: String
+    # is not null
+    notNull: String
 
     # recursive operators
     # ----------------------
     and: [FilterInput!]
     or: [FilterInput!]
-}
-
-input Options
-{
-    orderBy: [String!]
-    limit: Int!
 }
 
 type Query {
