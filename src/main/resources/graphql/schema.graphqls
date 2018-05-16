@@ -41,9 +41,17 @@ input FilterInput
     # ----------------------
     and: [FilterInput!]
     or: [FilterInput!]
+
+}
+
+input Options {
+    orderBy: [String]!
+    limit: Int
 }
 
 type Query {
-    findBooks(where: FilterInput): [Book]
+    findBooks(where: FilterInput, options: Options): [Book]
     findAllBooks: [Book]!
+    countAuthors: Int!
+    countBooks: Int!
 }
