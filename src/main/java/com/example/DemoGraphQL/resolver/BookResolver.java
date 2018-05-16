@@ -17,8 +17,7 @@ public class BookResolver implements GraphQLResolver<Book> {
     @Autowired
     private DSLContext jooq;
 
-    public Author getAuthor(Book book)
-    {
+    public Author getAuthor(Book book){
         return jooq
                 .select()
                 .from(AUTHOR)

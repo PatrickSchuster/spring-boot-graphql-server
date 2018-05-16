@@ -5,6 +5,8 @@ import com.example.DemoGraphQL.filter.FilterInput;
 import com.example.DemoGraphQL.filter.FilterInterface;
 import com.example.DemoGraphQL.filter.resolver.scalar.*;
 import org.jooq.Condition;
+import org.jooq.Field;
+import org.jooq.SortField;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 import org.springframework.stereotype.Component;
@@ -13,8 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class RootResolver
-{
+public class RootResolver {
+
+    private final static String TABLES = "com.example.DemoGraphQL.tables";
+
     List<Condition> conditions;
 
     private TableImplClassResolver tableImplClassResolver;
@@ -27,17 +31,17 @@ public class RootResolver
 
     /**
      * Recursively resolves the FilterInput tree starting from the root element to build the WHERE condition
-     * @param root          root element
-     * @param filterInput   the FilterInput object
+     *
+     * @param root        root element
+     * @param filterInput the FilterInput object
      */
-    public void resolve(TableImpl root, FilterInput filterInput)
-    {
-        if(filterInput == null) {
+    public void resolve(TableImpl root, FilterInput filterInput) {
+        if (filterInput == null) {
             return;
         }
 
         Condition scalarCondition = resolveScalar(root, filterInput);
-        if(scalarCondition != null) {
+        if (scalarCondition != null) {
             conditions.add(scalarCondition);
         }
 
@@ -60,22 +64,53 @@ public class RootResolver
 
     /**
      * returns the resolved condition for the WHERE clause and clears the resolver
+     *
      * @return Condition
      */
-    public Condition getCondition()
-    {
+    public Condition getCondition() {
         ArrayList<Condition> c = new ArrayList<>(conditions);
         conditions.clear();
         return DSL.and(c);
     }
 
+    public SortField resolveOrderBy(String[] orderBy) {
+        if (orderBy.length != 3) {
+            return null;
+        }
+        String clazz;
+        String field;
+        String direction;
+        clazz = Character.toString(orderBy[0].charAt(0)).toUpperCase() + orderBy[0].substring(1);
+        field = orderBy[1];
+        direction = orderBy[2];
+        try {
+            TableImpl tableImpl = (TableImpl) Class.forName(TABLES + "." + clazz).getConstructor().newInstance();
+            Field tableField = tableImpl.field(field.toUpperCase());
+            if ("ASC".equalsIgnoreCase(direction)) {
+                return tableField.asc();
+            }
+            return tableField.desc();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Integer resolveLimit(Integer limit) {
+        if (limit < 0) {
+            return 0;
+        }
+        return limit;
+    }
+
     /**
      * Resolves scalar comparision operators (e.g. eq, neq, etc...)
-     * @param root          root element
-     * @param filterInput   the FilterInput object
+     *
+     * @param root        root element
+     * @param filterInput the FilterInput object
      */
-    private Condition resolveScalar(TableImpl root, FilterInput filterInput)
-    {
+    private Condition resolveScalar(TableImpl root, FilterInput filterInput){
         FilterInterface c = null;
         if(filterInput.getEq() != null) {
             c = new Eq(root, filterInput.getEq(), tableImplClassResolver);
@@ -107,4 +142,5 @@ public class RootResolver
 
         return (c != null) ? c.getCondition() : null;
     }
+
 }
