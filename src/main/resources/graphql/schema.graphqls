@@ -40,8 +40,7 @@ input FilterInput
     # recursive operators
     # ----------------------
     and: [FilterInput!]
-    or: [FilterInput!]
-
+    or: [FilterInput!]s
 }
 
 input Options {
