@@ -3,10 +3,16 @@ package com.example.DemoGraphQL.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.filter.FilterInput;
 import com.example.DemoGraphQL.filter.resolver.RootResolver;
+import com.example.DemoGraphQL.filter.resolver.option.OptionsResolver;
 import com.example.DemoGraphQL.model.Book;
 import com.example.DemoGraphQL.options.Options;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Operator;
+import org.jooq.Record;
+import org.jooq.SelectConditionStep;
+import org.jooq.SelectSeekStep1;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.example.DemoGraphQL.tables.Author.AUTHOR;
@@ -22,9 +28,11 @@ public class Query implements GraphQLQueryResolver {
     private DSLContext jooq;
 
     private RootResolver rootResolver;
+    private OptionsResolver optionsResolver;
 
-    public Query(RootResolver rootResolver) {
+    public Query(RootResolver rootResolver, OptionsResolver optionsResolver) {
         this.rootResolver = rootResolver;
+        this.optionsResolver = optionsResolver;
     }
 
     public Iterable<Book> findAllBooks() {
@@ -77,15 +85,15 @@ public class Query implements GraphQLQueryResolver {
                     .into(BOOK).into(Book.class);
         }
 
-        SelectSeekStep1 selectWhereOrderBy = selectWhere.orderBy(rootResolver.resolveOrderBy(options.getOrderBy()));
+        SelectSeekStep1 selectWhereOrderBy = selectWhere.orderBy(optionsResolver.resolveOrderBy(options.getOrderBy()));
 
         if (options.getLimit() != null) {
             return selectWhereOrderBy
-                    .limit(rootResolver.resolveLimit(options.getLimit()))
+                    .limit(optionsResolver.resolveLimit(options.getLimit()))
                     .fetch()
                     .into(BOOK).into(Book.class);
         }
-        return selectWhereOrderBy
+        return selectWhereOrderBy.fetch().into(BOOK).into(Book.class);
     }
 
     public long countBooks() {

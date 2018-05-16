@@ -73,6 +73,7 @@ public class RootResolver {
         return DSL.and(c);
     }
 
+    /*
     public SortField resolveOrderBy(String[] orderBy) {
         if (orderBy.length != 3) {
             return null;
@@ -96,13 +97,16 @@ public class RootResolver {
 
         return null;
     }
+    */
 
+    /*
     public Integer resolveLimit(Integer limit) {
         if (limit < 0) {
             return 0;
         }
         return limit;
     }
+    */
 
     /**
      * Resolves scalar comparision operators (e.g. eq, neq, etc...)

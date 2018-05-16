@@ -1,6 +1,7 @@
 package com.example.DemoGraphQL;
 
 import com.example.DemoGraphQL.filter.resolver.RootResolver;
+import com.example.DemoGraphQL.filter.resolver.option.OptionsResolver;
 import com.example.DemoGraphQL.resolver.BookResolver;
 import com.example.DemoGraphQL.resolver.Query;
 import org.springframework.boot.SpringApplication;
@@ -31,8 +32,8 @@ public class DemoGraphQlApplication {
      * The resolver for the Query.
      */
     @Bean
-    public Query query(RootResolver rootResolver) {
-        return new Query(rootResolver);
+    public Query query(RootResolver rootResolver, OptionsResolver orderByResolver) {
+        return new Query(rootResolver, orderByResolver);
     }
 
 }
