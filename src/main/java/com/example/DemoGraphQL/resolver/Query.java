@@ -4,6 +4,7 @@ import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.filter.FilterInput;
 import com.example.DemoGraphQL.filter.resolver.RootResolver;
 import com.example.DemoGraphQL.filter.resolver.option.OptionsResolver;
+import com.example.DemoGraphQL.filter.resolver.option.OptionsResolver;
 import com.example.DemoGraphQL.model.Book;
 import com.example.DemoGraphQL.options.Options;
 import org.jooq.Condition;
@@ -44,40 +45,15 @@ public class Query implements GraphQLQueryResolver {
                 .into(Book.class);
     }
 
-    public Iterable<Book> findBooks(FilterInput filters) {
+    public Iterable<Book> findBooks(FilterInput filters, Options options)
+    {
         rootResolver.resolve(BOOK, filters);
         Condition condition = rootResolver.getCondition();
-        return jooq
-                .select(BOOK.fields())
-                .from(BOOK)
-                .join(AUTHOR).onKey()
-                .where(condition)
-                .fetch()
-                .into(BOOK).into(Book.class);
-    }
-
-    public Iterable<Book> findBooks(FilterInput filters, Operator operator, FilterInput author, Options options) {
-        rootResolver.resolve(BOOK, filters);
-        Condition a = rootResolver.getCondition();
-
-        rootResolver.resolve(AUTHOR, author);
-        Condition b = rootResolver.getCondition();
-
-        Condition finalCondition;
-        switch (operator) {
-            case OR:
-                finalCondition = DSL.or(a, b);
-                break;
-            default:
-            case AND:
-                finalCondition = DSL.and(a, b);
-                break;
-        }
 
         SelectConditionStep<Record> selectWhere = jooq.select(BOOK.fields())
                 .from(BOOK)
                 .join(AUTHOR).onKey()
-                .where(finalCondition);
+                .where(condition);
 
         if (options == null) {
             return selectWhere
@@ -95,13 +71,4 @@ public class Query implements GraphQLQueryResolver {
         }
         return selectWhereOrderBy.fetch().into(BOOK).into(Book.class);
     }
-
-    public long countBooks() {
-        return jooq.selectCount().from(BOOK).fetchOne(0, int.class);
-    }
-
-    public long countAuthors() {
-        return jooq.selectCount().from(AUTHOR).fetchOne(0, int.class);
-    }
-
 }
