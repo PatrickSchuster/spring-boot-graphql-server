@@ -4,7 +4,6 @@ import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.filter.FilterInput;
 import com.example.DemoGraphQL.filter.resolver.RootResolver;
 import com.example.DemoGraphQL.model.Book;
-import com.example.DemoGraphQL.options.Options;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static com.example.DemoGraphQL.tables.Author.AUTHOR;
 import static com.example.DemoGraphQL.tables.Book.BOOK;
 
-
 /**
  * To define the operations of the root Query type.
  */
-public class Query implements GraphQLQueryResolver {
-
+public class Query implements GraphQLQueryResolver
+{
     @Autowired
     private DSLContext jooq;
 
@@ -36,64 +34,17 @@ public class Query implements GraphQLQueryResolver {
                 .into(Book.class);
     }
 
-    public Iterable<Book> findBooks(FilterInput filters) {
+    public Iterable<Book> findBooks(FilterInput filters)
+    {
         rootResolver.resolve(BOOK, filters);
         Condition condition = rootResolver.getCondition();
+
         return jooq
                 .select(BOOK.fields())
                 .from(BOOK)
                 .join(AUTHOR).onKey()
                 .where(condition)
                 .fetch()
-                .into(BOOK).into(Book.class);
+                .into(Book.class);
     }
-
-    public Iterable<Book> findBooks(FilterInput filters, Operator operator, FilterInput author, Options options) {
-        rootResolver.resolve(BOOK, filters);
-        Condition a = rootResolver.getCondition();
-
-        rootResolver.resolve(AUTHOR, author);
-        Condition b = rootResolver.getCondition();
-
-        Condition finalCondition;
-        switch (operator) {
-            case OR:
-                finalCondition = DSL.or(a, b);
-                break;
-            default:
-            case AND:
-                finalCondition = DSL.and(a, b);
-                break;
-        }
-
-        SelectConditionStep<Record> selectWhere = jooq.select(BOOK.fields())
-                .from(BOOK)
-                .join(AUTHOR).onKey()
-                .where(finalCondition);
-
-        if (options == null) {
-            return selectWhere
-                    .fetch()
-                    .into(BOOK).into(Book.class);
-        }
-
-        SelectSeekStep1 selectWhereOrderBy = selectWhere.orderBy(rootResolver.resolveOrderBy(options.getOrderBy()));
-
-        if (options.getLimit() != null) {
-            return selectWhereOrderBy
-                    .limit(rootResolver.resolveLimit(options.getLimit()))
-                    .fetch()
-                    .into(BOOK).into(Book.class);
-        }
-        return selectWhereOrderBy
-    }
-
-    public long countBooks() {
-        return jooq.selectCount().from(BOOK).fetchOne(0, int.class);
-    }
-
-    public long countAuthors() {
-        return jooq.selectCount().from(AUTHOR).fetchOne(0, int.class);
-    }
-
 }
