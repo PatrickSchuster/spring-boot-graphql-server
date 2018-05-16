@@ -152,7 +152,7 @@ public class RootResolver {
         else if(filterInput.getGe() != null) {
             c = new Ge(root, filterInput.getGe(), tableImplClassResolver);
         }
-        
+
         return (c != null) ? c.getCondition() : null;
     }
 

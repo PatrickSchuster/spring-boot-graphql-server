@@ -63,7 +63,6 @@ public class Query implements GraphQLQueryResolver {
 
         final List<SortField> fields = optionsResolver.resolveOrderBy(options.getOrderBy());
         SelectSeekStepN<Record> selectWhereOrderBy = selectWhere.orderBy(fields.toArray(new SortField[fields.size()]));
-        int a =2;
         if (options.getLimit() != null) {
             return selectWhereOrderBy
                     .limit(optionsResolver.resolveLimit(options.getLimit()))

@@ -18,10 +18,11 @@ public class OptionsResolver {
     }
 
     public List<SortField> resolveOrderBy(String[] orderBy) {
-        if (orderBy.length % 2 != 0) {
-            return null;
-        }
         List<SortField> fields = new ArrayList<>();
+        if (orderBy.length % 2 != 0) {
+            return fields;
+        }
+
         String name;
         String direction;
         for (int i = 0; i < orderBy.length; i += 2) {
