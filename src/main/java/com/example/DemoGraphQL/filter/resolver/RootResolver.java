@@ -114,7 +114,8 @@ public class RootResolver {
      * @param root        root element
      * @param filterInput the FilterInput object
      */
-    private Condition resolveScalar(TableImpl root, FilterInput filterInput){
+    private Condition resolveScalar(TableImpl root, FilterInput filterInput)
+    {
         FilterInterface c = null;
         if(filterInput.getEq() != null) {
             c = new Eq(root, filterInput.getEq(), tableImplClassResolver);
@@ -127,6 +128,9 @@ public class RootResolver {
         }
         else if(filterInput.getLt() != null) {
             c = new Lt(root, filterInput.getLt(), tableImplClassResolver);
+        }
+        else if(filterInput.getLe() != null) {
+            c = new Le(root, filterInput.getLe(), tableImplClassResolver);
         }
         else if(filterInput.getIn() != null) {
             c = new In(root, filterInput.getIn(), tableImplClassResolver);
@@ -142,6 +146,12 @@ public class RootResolver {
         }
         else if(filterInput.getNotNull() != null) {
             c = new NotNull(root, filterInput.getNotNull(), tableImplClassResolver);
+        }
+        else if(filterInput.getGt() != null) {
+            c = new Gt(root, filterInput.getGt(), tableImplClassResolver);
+        }
+        else if(filterInput.getGe() != null) {
+            c = new Ge(root, filterInput.getGe(), tableImplClassResolver);
         }
 
         return (c != null) ? c.getCondition() : null;
