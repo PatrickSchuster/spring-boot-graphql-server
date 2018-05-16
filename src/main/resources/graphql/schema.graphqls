@@ -29,6 +29,7 @@ input FilterInput
     # ----------------------
     and: [FilterInput!]
     or: [FilterInput!]
+
 }
 
 enum Operator {
@@ -36,8 +37,13 @@ enum Operator {
     OR
 }
 
+input Options {
+    orderBy: [String]!
+    limit: Int
+}
+
 type Query {
-    findBooks(where: FilterInput, operator: Operator = "AND", author: FilterInput): [Book]
+    findBooks(where: FilterInput, operator: Operator = "AND", author: FilterInput, options: Options): [Book]
     findAllBooks: [Book]!
     countAuthors: Int!
     countBooks: Int!

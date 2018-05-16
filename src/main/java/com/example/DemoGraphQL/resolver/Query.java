@@ -3,10 +3,13 @@ package com.example.DemoGraphQL.resolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.filter.FilterInput;
 import com.example.DemoGraphQL.filter.resolver.RootResolver;
-import com.example.DemoGraphQL.model.Author;
 import com.example.DemoGraphQL.model.Book;
+import com.example.DemoGraphQL.options.Options;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.SelectConditionStep;
+import org.jooq.SelectSeekStep1;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -39,7 +42,7 @@ public class Query implements GraphQLQueryResolver {
                 .into(Book.class);
     }
 
-    public Iterable<Book> findBooks(FilterInput filters){
+    public Iterable<Book> findBooks(FilterInput filters) {
         rootResolver.resolve(BOOK, filters);
         return jooq.selectFrom(BOOK)
                 .where(rootResolver.getCondition())
@@ -47,7 +50,7 @@ public class Query implements GraphQLQueryResolver {
                 .into(Book.class);
     }
 
-    public Iterable<Book> findBooks(FilterInput filters, Operator operator, FilterInput author){
+    public Iterable<Book> findBooks(FilterInput filters, Operator operator, FilterInput author, Options options) {
         rootResolver.resolve(BOOK, filters);
         Condition a = rootResolver.getCondition();
 
@@ -65,10 +68,26 @@ public class Query implements GraphQLQueryResolver {
                 break;
         }
 
-        return jooq.select(BOOK.fields())
+        SelectConditionStep<Record> selectWhere = jooq.select(BOOK.fields())
                 .from(BOOK)
                 .join(AUTHOR).onKey()
-                .where(finalCondition)
+                .where(finalCondition);
+
+        if (options == null) {
+            return selectWhere
+                    .fetch()
+                    .into(BOOK).into(Book.class);
+        }
+
+        SelectSeekStep1 selectWhereOrderBy = selectWhere.orderBy(rootResolver.resolveOrderBy(options.getOrderBy()));
+
+        if (options.getLimit() != null) {
+            return selectWhereOrderBy
+                    .limit(rootResolver.resolveLimit(options.getLimit()))
+                    .fetch()
+                    .into(BOOK).into(Book.class);
+        }
+        return selectWhereOrderBy
                 .fetch()
                 .into(BOOK).into(Book.class);
     }
