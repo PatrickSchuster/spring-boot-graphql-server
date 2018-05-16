@@ -1,16 +1,23 @@
 package com.example.DemoGraphQL.resolver;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.example.DemoGraphQL.model.Author;
+import com.example.DemoGraphQL.filter.FilterInput;
+import com.example.DemoGraphQL.filter.resolver.RootResolver;
+import com.example.DemoGraphQL.filter.resolver.option.OptionsResolver;
 import com.example.DemoGraphQL.model.Book;
-import com.example.DemoGraphQL.order.OrderBy;
+import com.example.DemoGraphQL.options.Options;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Record;
-import org.jooq.TableField;
+import org.jooq.SelectConditionStep;
+import org.jooq.SelectSeekStep1;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static com.example.DemoGraphQL.tables.Author.AUTHOR;
 import static com.example.DemoGraphQL.tables.Book.BOOK;
+
 
 /**
  * To define the operations of the root Query type.
@@ -20,45 +27,47 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     private DSLContext jooq;
 
-    public Query() {
+    private RootResolver rootResolver;
+    private OptionsResolver optionsResolver;
 
+    public Query(RootResolver rootResolver, OptionsResolver optionsResolver) {
+        this.rootResolver = rootResolver;
+        this.optionsResolver = optionsResolver;
     }
 
     public Iterable<Book> findAllBooks() {
-        //return jooq.selectFrom(BOOK).where(BOOK.AUTHOR_ID.eq(new Long(1))).orderBy(BOOK.ID.asc()).fetch().into(Book.class);
-        return jooq.selectFrom(BOOK).fetch().into(Book.class);
+        return jooq
+                .selectFrom(BOOK)
+                .orderBy(BOOK.ID.asc())
+                .fetch()
+                .into(BOOK)
+                .into(Book.class);
     }
 
-    public Iterable<Author> findAllAuthors() {
-        return jooq.selectFrom(AUTHOR).fetch().into(Author.class);
-    }
+    @SuppressWarnings("unchecked")
+    public Iterable<Book> findBooks(FilterInput filters, Options options) {
+        rootResolver.resolve(BOOK, filters);
+        Condition condition = rootResolver.getCondition();
 
-    public long countBooks() {
-        return jooq.selectCount().from(BOOK).fetchOne(0, int.class);
-    }
+        SelectConditionStep<Record> selectWhere = jooq.select(BOOK.fields())
+                .from(BOOK)
+                .join(AUTHOR).onKey()
+                .where(condition);
 
-    public long countAuthors() {
-        return jooq.selectCount().from(AUTHOR).fetchOne(0, int.class);
-    }
-
-    public Iterable<Book> findBooks(OrderBy orderBy) {
-        TableField tableField = null;
-        String field = orderBy.getField();
-        if(field.equalsIgnoreCase("title")){
-            tableField = Book.getTitleJooqTableField();
-        } else if(field.equalsIgnoreCase("id")){
-            tableField = Book.getIdJooqTableField();
-        } else if(field.equalsIgnoreCase("isbn")){
-            tableField = Book.getIsbnJooqTableField();
-        } else if(field.equalsIgnoreCase("pageCount")){
-            tableField = Book.getPageCountJooqTableField();
+        if (options == null) {
+            return selectWhere
+                    .fetch()
+                    .into(BOOK).into(Book.class);
         }
-        if(orderBy.getDirection().equalsIgnoreCase("ASC")){
-            tableField.asc();
-        } else{
-            tableField.desc();
-        }
-        return jooq.select().from(BOOK).orderBy(tableField).fetch().into(Book.class);
-    }
 
+        SelectSeekStep1 selectWhereOrderBy = selectWhere.orderBy(optionsResolver.resolveOrderBy(options.getOrderBy()));
+
+        if (options.getLimit() != null) {
+            return selectWhereOrderBy
+                    .limit(optionsResolver.resolveLimit(options.getLimit()))
+                    .fetch()
+                    .into(BOOK).into(Book.class);
+        }
+        return selectWhereOrderBy.fetch().into(BOOK).into(Book.class);
+    }
 }

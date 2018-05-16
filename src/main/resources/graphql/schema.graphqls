@@ -12,16 +12,51 @@ type Book {
     author: Author
 }
 
-type Query {
-    findAllBooks: [Book]!
-    findAllAuthors: [Author]!
-    countAuthors: Int!
-    countBooks: Int!
+input FilterInput
+{
+    # scalar fields
+    # ----------------------
+    # Equals
+    eq: [String!]
+    # Not Equals
+    ne: [String!]
+    # Like
+    like: [String!]
+    # Less Than
+    lt: [String!]
+    # greater Than
+    gt: [String!]
+    # in
+    in: [String!]
+    # not in
+    nin: [String!]
+    # between
+    between: [String!]
+    # is null
+    isNull: String
+    # is not null
+    notNull: String
 
-    findBooks(orderBy: OrderBy): [Book]
+    # recursive operators
+    # ----------------------
+    and: [FilterInput!]
+    or: [FilterInput!]
+
 }
 
-input OrderBy {
-    field: String!
-    direction: String!
+enum Operator {
+    AND
+    OR
+}
+
+input Options {
+    orderBy: [String]!
+    limit: Int
+}
+
+type Query {
+    findBooks(where: FilterInput, operator: Operator = "AND", author: FilterInput, options: Options): [Book]
+    findAllBooks: [Book]!
+    countAuthors: Int!
+    countBooks: Int!
 }
