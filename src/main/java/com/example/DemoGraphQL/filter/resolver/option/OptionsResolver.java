@@ -5,6 +5,9 @@ import org.jooq.Field;
 import org.jooq.SortField;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class OptionsResolver {
 
@@ -14,23 +17,27 @@ public class OptionsResolver {
         this.tableImplClassResolver = tableImplClassResolver;
     }
 
-    public SortField resolveOrderBy(String[] orderBy) {
-        if (orderBy.length != 2) {
+    public List<SortField> resolveOrderBy(String[] orderBy) {
+        if (orderBy.length % 2 != 0) {
             return null;
         }
+        List<SortField> fields = new ArrayList<>();
         String name;
         String direction;
-        name = orderBy[0];
-        direction = orderBy[1];
-        TableImplClassResolver.TableImplClassResolverResult tableImplClassResolverResult = tableImplClassResolver.resolve(name);
-        Field tableField = tableImplClassResolverResult.root.field(tableImplClassResolverResult.root.field(tableImplClassResolverResult.field.toUpperCase()));
-        if(tableField == null){
-            return null;
+        for (int i = 0; i < orderBy.length; i += 2) {
+            name = orderBy[i];
+            direction = orderBy[i + 1];
+            TableImplClassResolver.TableImplClassResolverResult tableImplClassResolverResult = tableImplClassResolver.resolve(name);
+            Field tableField = tableImplClassResolverResult.root.field(tableImplClassResolverResult.root.field(tableImplClassResolverResult.field.toUpperCase()));
+            SortField sortField;
+            if ("ASC".equalsIgnoreCase(direction)) {
+                sortField = tableField.asc();
+            } else {
+                sortField = tableField.desc();
+            }
+            fields.add(sortField);
         }
-        if ("ASC".equalsIgnoreCase(direction)) {
-            return tableField.asc();
-        }
-        return tableField.desc();
+        return fields;
     }
 
     public Integer resolveLimit(Integer limit) {

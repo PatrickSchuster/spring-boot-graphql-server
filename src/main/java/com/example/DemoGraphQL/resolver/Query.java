@@ -10,7 +10,8 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.SelectConditionStep;
-import org.jooq.SelectSeekStep1;
+import org.jooq.SelectSeekStepN;
+import org.jooq.SortField;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -60,8 +61,9 @@ public class Query implements GraphQLQueryResolver {
                     .into(BOOK).into(Book.class);
         }
 
-        SelectSeekStep1 selectWhereOrderBy = selectWhere.orderBy(optionsResolver.resolveOrderBy(options.getOrderBy()));
-
+        final List<SortField> fields = optionsResolver.resolveOrderBy(options.getOrderBy());
+        SelectSeekStepN<Record> selectWhereOrderBy = selectWhere.orderBy(fields.toArray(new SortField[fields.size()]));
+        int a =2;
         if (options.getLimit() != null) {
             return selectWhereOrderBy
                     .limit(optionsResolver.resolveLimit(options.getLimit()))
