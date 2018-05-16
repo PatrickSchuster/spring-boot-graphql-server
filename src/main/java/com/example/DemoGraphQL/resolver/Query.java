@@ -4,17 +4,16 @@ import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import com.example.DemoGraphQL.filter.FilterInput;
 import com.example.DemoGraphQL.filter.resolver.RootResolver;
 import com.example.DemoGraphQL.filter.resolver.option.OptionsResolver;
-import com.example.DemoGraphQL.filter.resolver.option.OptionsResolver;
 import com.example.DemoGraphQL.model.Book;
 import com.example.DemoGraphQL.options.Options;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Operator;
 import org.jooq.Record;
 import org.jooq.SelectConditionStep;
 import org.jooq.SelectSeekStep1;
-import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static com.example.DemoGraphQL.tables.Author.AUTHOR;
 import static com.example.DemoGraphQL.tables.Book.BOOK;
@@ -45,8 +44,8 @@ public class Query implements GraphQLQueryResolver {
                 .into(Book.class);
     }
 
-    public Iterable<Book> findBooks(FilterInput filters, Options options)
-    {
+    @SuppressWarnings("unchecked")
+    public Iterable<Book> findBooks(FilterInput filters, Options options) {
         rootResolver.resolve(BOOK, filters);
         Condition condition = rootResolver.getCondition();
 
