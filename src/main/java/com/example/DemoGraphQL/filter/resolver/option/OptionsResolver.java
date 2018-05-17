@@ -5,7 +5,6 @@ import org.jooq.Field;
 import org.jooq.SortField;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -25,7 +24,7 @@ public class OptionsResolver {
             return new SortField[0];
         }
 
-        List<SortField> fields = new ArrayList<>();
+        SortField[] fieldsArray = new SortField[orderBy.size()];
         String name;
         String direction;
         for (int i = 0; i < orderBy.size(); i += 2) {
@@ -39,10 +38,10 @@ public class OptionsResolver {
             } else {
                 sortField = tableField.desc();
             }
-            fields.add(sortField);
+            fieldsArray[i] = sortField;
         }
 
-        return fields.toArray(new SortField[0]);
+        return fieldsArray;
     }
 
     public Integer resolveLimit(Integer limit)
