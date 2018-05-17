@@ -43,7 +43,7 @@ Will yield all books (with their title, isbn, id and pageCount) as well as their
       ]}
     ]
   }, options:{
-    orderBy: ["Author.id", "DESC"],
+    orderBy: ["Author.id", "ASC", "Book.isbn", "DESC"],
     limit: 2
   }) {
     id
@@ -58,4 +58,4 @@ Will yield all books (with their title, isbn, id and pageCount) as well as their
 }
 ```
 
-Will yield all books (with id, title, isbn and author (with id, first and last name)) WHERE ID IN (10, 20, 30, 60) AND (Author.id = 1 OR title LIKE Illum%) ordered by Author.id in descending order and limited to two books.
+Will yield all books (with id, title, isbn and author (with id, first and last name)) WHERE ID IN (10, 20, 30, 60) AND (Author.id = 1 OR title LIKE Illum%) ordered by Author.id in ascending and by Book.isbn in descending order and limited to two books.
