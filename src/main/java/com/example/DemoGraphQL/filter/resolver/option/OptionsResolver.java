@@ -17,12 +17,15 @@ public class OptionsResolver {
         this.tableImplClassResolver = tableImplClassResolver;
     }
 
-    public List<SortField> resolveOrderBy(String[] orderBy) {
-        List<SortField> fields = new ArrayList<>();
-        if (orderBy.length % 2 != 0) {
-            return fields;
+    public SortField[] resolveOrderBy(String[] orderBy)
+    {
+        if (orderBy == null
+            || orderBy.length % 2 != 0)
+        {
+            return new SortField[0];
         }
 
+        List<SortField> fields = new ArrayList<>();
         String name;
         String direction;
         for (int i = 0; i < orderBy.length; i += 2) {
@@ -38,14 +41,16 @@ public class OptionsResolver {
             }
             fields.add(sortField);
         }
-        return fields;
+
+        return fields.toArray(new SortField[0]);
     }
 
-    public Integer resolveLimit(Integer limit) {
-        if (limit < 0) {
-            return 0;
+    public Integer resolveLimit(Integer limit)
+    {
+        if(limit == null) {
+            return -1;
         }
+
         return limit;
     }
-
 }

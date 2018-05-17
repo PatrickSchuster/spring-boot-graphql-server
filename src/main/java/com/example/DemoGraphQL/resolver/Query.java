@@ -45,30 +45,22 @@ public class Query implements GraphQLQueryResolver {
                 .into(Book.class);
     }
 
-    @SuppressWarnings("unchecked")
-    public Iterable<Book> findBooks(FilterInput filters, Options options) {
+
+    public Iterable<Book> findBooks(FilterInput filters, Options options)
+    {
+        Options o = (options != null) ? options : new Options();
+
+        // where
         rootResolver.resolve(BOOK, filters);
         Condition condition = rootResolver.getCondition();
 
-        SelectConditionStep<Record> selectWhere = jooq.select(BOOK.fields())
+        return jooq.select(BOOK.fields())
                 .from(BOOK)
                 .join(AUTHOR).onKey()
-                .where(condition);
-
-        if (options == null) {
-            return selectWhere
-                    .fetch()
-                    .into(BOOK).into(Book.class);
-        }
-
-        final List<SortField> fields = optionsResolver.resolveOrderBy(options.getOrderBy());
-        SelectSeekStepN<Record> selectWhereOrderBy = selectWhere.orderBy(fields.toArray(new SortField[fields.size()]));
-        if (options.getLimit() != null) {
-            return selectWhereOrderBy
-                    .limit(optionsResolver.resolveLimit(options.getLimit()))
-                    .fetch()
-                    .into(BOOK).into(Book.class);
-        }
-        return selectWhereOrderBy.fetch().into(BOOK).into(Book.class);
+                .where(condition)
+                .orderBy(optionsResolver.resolveOrderBy(o.getOrderBy()))
+                .limit(optionsResolver.resolveLimit(o.getLimit()))
+                .fetch()
+                .into(BOOK).into(Book.class);
     }
 }
