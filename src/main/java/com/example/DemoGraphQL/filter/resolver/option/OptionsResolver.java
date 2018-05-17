@@ -17,10 +17,10 @@ public class OptionsResolver {
         this.tableImplClassResolver = tableImplClassResolver;
     }
 
-    public SortField[] resolveOrderBy(String[] orderBy)
+    public SortField[] resolveOrderBy(List<String> orderBy)
     {
         if (orderBy == null
-            || orderBy.length % 2 != 0)
+            || orderBy.size() % 2 != 0)
         {
             return new SortField[0];
         }
@@ -28,9 +28,9 @@ public class OptionsResolver {
         List<SortField> fields = new ArrayList<>();
         String name;
         String direction;
-        for (int i = 0; i < orderBy.length; i += 2) {
-            name = orderBy[i];
-            direction = orderBy[i + 1];
+        for (int i = 0; i < orderBy.size(); i += 2) {
+            name = orderBy.get(i);
+            direction = orderBy.get(i + 1);
             TableImplClassResolver.TableImplClassResolverResult tableImplClassResolverResult = tableImplClassResolver.resolve(name);
             Field tableField = tableImplClassResolverResult.root.field(tableImplClassResolverResult.root.field(tableImplClassResolverResult.field.toUpperCase()));
             SortField sortField;

@@ -1,20 +1,17 @@
 package com.example.DemoGraphQL.options;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
-public class Options {
+import java.util.List;
 
-    private String[] orderBy;
+public class Options
+{
+    @Getter
+    @Setter
+    private List<String> orderBy;
+
+    @Getter
+    @Setter
     private Integer limit;
-
-    @JsonProperty("orderBy")
-    public String[] getOrderBy() {
-        return orderBy;
-    }
-
-    @JsonProperty("limit")
-    public Integer getLimit() {
-        return limit;
-    }
-
 }

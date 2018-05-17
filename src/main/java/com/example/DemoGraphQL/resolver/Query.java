@@ -8,13 +8,7 @@ import com.example.DemoGraphQL.model.Book;
 import com.example.DemoGraphQL.options.Options;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Record;
-import org.jooq.SelectConditionStep;
-import org.jooq.SelectSeekStepN;
-import org.jooq.SortField;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 import static com.example.DemoGraphQL.tables.Author.AUTHOR;
 import static com.example.DemoGraphQL.tables.Book.BOOK;
